@@ -1,0 +1,170 @@
+## Задание 1
+Задание решается несколькими вариантами. Выбираем наиболее простое и быстрое, ибо обратная задача не стоит. Для вариативности лишь озвучу вариант установки виртуальной машины через терминал и kmv или тот же virtualbox создав XML файл с настройками. Так же AWS EC2, но это уже совсем облачная история..
+
+Так как в задании есть пункт с установкой SSH-сервера, то упрощаю себе задачу.
+Буду работать со своей домашней станции через терминал по ssh подключению.
+После установки сервера проверяю, что ssh работает:
+systemctl status sshd
+    видим active(running)
+Для безопасности можно в конфиге ssh запретить заходить под root и использовать только ключ вместо пароля.
+
+    Ставим vim
+sudo add-apt-repository ppa:jonathonf/vim
+sudo apt update
+sudo apt install vim
+    Или пользуемся nano.
+
+    Меняем параметры в конфиге:
+sudo vim /etc/ssh/sshd_config
+    ставим
+PermitRootLogin no
+PasswordAutentification yes (no - если будем использовать вход по ключу)
+    сохраняем
+
+    Перезапускаем службу.
+sudo service ssh restart
+
+ Дальнейшее выполнение 1 и 3 задания будут выполняться с подключением по ssh.
+(суть заданий не меняется, а работать удобнее)
+ Для полноты настройки добавлю, что необходимо создать мост. В virtualbox достаточно в настройках сети выставить bridge. На kvm bridge нужно будет создать и прописать вручную.
+###########
+На нашем сервере вводим ip a, проверяем, что dhcp выдал ip и он пингется.
+Подключаемся к серверу коммандой ssh username@ip
+Проверяем, что я поставил версию, которая указана в задании
+max@test-srv1:~$ cat /proc/version
+Linux version 5.4.0-139-generic (buildd@lcy02-amd64-112) (gcc version 9.4.0 (Ubuntu 9.4.0-1ubuntu1~20.04.1)) #156-Ubuntu SMP Fri Jan 20 17:27:18 UTC 2023
+
+
+max@test-srv1:~$ cd /var
+max@test-srv1:/var$ pwd
+/var
+max@test-srv1:/var$ man ls
+ # читаем мануал
+max@test-srv1:/var$ ls -a
+.  ..  backups  cache  crash  lib  local  lock  log  mail  opt  run  snap  spool  tmp
+max@test-srv1:/var$ cd log
+max@test-srv1:/var/log$ cd ..
+max@test-srv1:/var$ cd tmp
+max@test-srv1:/var/tmp$ mkdir lesson
+max@test-srv1:/var/tmp$ cd /var/tmp/lesson/
+max@test-srv1:/var/tmp/lesson$ touch hello.txt
+max@test-srv1:/var/tmp/lesson$ chmod 777 hello.txt
+max@test-srv1:/var/tmp/lesson$ ls -l
+total 0
+-rwxrwxrwx 1 max max 0 Mar  1 09:37 hello.txt
+max@test-srv1:/var/tmp/lesson$ sudo apt-get update
+# vim поставили чуть ранее
+# читаем про vim, а лучше потренироваться в тренажере vim
+max@test-srv1:/var/tmp/lesson$ sudo vim hello.txt
+# создали содерживое, сохранили
+max@test-srv1:/var/tmp/lesson$ cat hello.txt 
+0abc
+00abc
+000abc
+0000abc
+00000abc
+000000abc
+1abc
+11abc
+111abc
+1111abc
+11111abc
+111111abc
+1111111abc
+2abc
+22abc
+222abc
+2222abc
+22222abc
+222222abc
+2222222abc
+22222222abc
+3abc
+33abc
+4abc
+44abc
+5abc
+6abc
+7abc
+8abc
+9abc
+10abc
+12abc
+13abc
+14abc
+15abc
+16abc
+17abc
+18abc
+19abc
+20abc
+max@test-srv1:/var/tmp/lesson$ less hello.txt
+#тоже самое в другом режиме
+max@test-srv1:/var/tmp/lesson$ tail hello.txt 
+10abc
+12abc
+13abc
+14abc
+15abc
+16abc
+17abc
+18abc
+19abc
+20abc
+#tail по умолчанию выводит последние 10 строк
+max@test-srv1:/var/tmp/lesson$ head -n7 hello.txt 
+0abc
+00abc
+000abc
+0000abc
+00000abc
+000000abc
+1abc
+max@test-srv1:/var/tmp/lesson$ wc -l hello.txt 
+40 hello.txt
+max@test-srv1:/var/tmp/lesson$ cat hello.txt | wc -l 
+40
+max@test-srv1:/var/tmp/lesson$ cat hello.txt | grep abc
+0abc
+00abc
+000abc
+0000abc
+00000abc
+000000abc
+1abc
+11abc
+111abc
+1111abc
+11111abc
+111111abc
+1111111abc
+2abc
+22abc
+222abc
+2222abc
+22222abc
+222222abc
+2222222abc
+22222222abc
+3abc
+33abc
+4abc
+44abc
+5abc
+6abc
+7abc
+8abc
+9abc
+10abc
+12abc
+13abc
+14abc
+15abc
+16abc
+17abc
+18abc
+19abc
+20abc
+
+
+
